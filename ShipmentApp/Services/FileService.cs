@@ -17,9 +17,10 @@ namespace ShipmentApp.Services
             var lines = await File.ReadAllLinesAsync($"Data/{name}.txt");
             return lines;
         }
-        public List<PricingInfo> LoadPricingInfo()
+
+        public async Task<List<PricingInfo>> LoadPricingInfoAsync()
         {
-            var lines = File.ReadAllLines("Data/PricingInfo.txt");
+            var lines = await File.ReadAllLinesAsync("Data/PricingInfo.txt");
             List<PricingInfo> pricingList = new List<PricingInfo>();
             foreach (var line in lines)
             {

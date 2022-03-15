@@ -3,25 +3,27 @@ using ShipmentApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShipmentApp.Services
 {
     public class PriceService
     {
-        private List<PricingInfo> _pricingInfo;
+        //private List<PricingInfo> _pricingInfo;
         private IFileService _fileService;
 
         public PriceService(IFileService fileService)
         {
             _fileService = fileService;
-            _pricingInfo = _fileService.LoadPricingInfo();
+            //_pricingInfo = _fileService.LoadPricingInfo();
         }
 
-        public void CalculatePrice(List<Transaction> transactions)
+        public async void CalculatePrice(List<Transaction> transactions)
         {
             foreach (var transaction in transactions)
             {
-                var price = _pricingInfo.FirstOrDefault(s => s.PackageSize == transaction.PackageSize
+                var pricingInfo = await _fileService.LoadPricingInfoAsync();
+                var price = pricingInfo.FirstOrDefault(s => s.PackageSize == transaction.PackageSize
                 && s.Provider == transaction.Provider);
                 if (price != null)
                 {
@@ -33,20 +35,23 @@ namespace ShipmentApp.Services
                 }
             }
         }
-        public void CalculateDiscounts(List<Transaction> transactions)
+
+        public async void CalculateDiscounts(List<Transaction> transactions)
         {
             var previousMonth = 0;
             decimal monthlyLimit = 0;
-            decimal lowestSmallPrice = _pricingInfo.OrderBy(p => p.Price).FirstOrDefault(s => s.PackageSize == "S").Price; //Find lowest S size cost
             int countLP = 0; // third LP shipment free counter
-            var ordered = transactions.OrderBy(d => d.Date).Where(v=>v.Valid == true);
 
+            var pricingInfo = await _fileService.LoadPricingInfoAsync();
+            decimal lowestSmallPrice = pricingInfo.OrderBy(p => p.Price).FirstOrDefault(s => s.PackageSize == "S").Price; //Find lowest S size cost
+
+            var ordered = transactions.OrderBy(d => d.Date).Where(v=>v.Valid == true);
             foreach (var transaction in ordered)
             {
                 var currentMonth = DateTime.ParseExact(transaction.Date, "yyyy-MM-dd", null).Month;
                 if (currentMonth != previousMonth)
                 {
-                    monthlyLimit = 10.0M; //actual monthly limit
+                    monthlyLimit = 10.0M; //monthly limit
                     countLP = 0;
                 }
                 if (transaction.PackageSize == "S" && monthlyLimit > 0)
@@ -57,8 +62,7 @@ namespace ShipmentApp.Services
                 if (transaction.PackageSize == "L" && transaction.Provider == "LP" && monthlyLimit > 0)
                 {
                     countLP++;
-                    if (countLP == 3) //third that month or every third? Does that apply if the previous month had 2, but third one would be in a different month?
-                    //if (countLP % 3 == 0) // alternative
+                    if (countLP == 3) 
                     {
                         var discount = transaction.Price;
                         monthlyLimit = AssignDiscount(transaction, monthlyLimit, discount);
@@ -67,6 +71,7 @@ namespace ShipmentApp.Services
                 previousMonth = currentMonth;
             }
         }
+
         private decimal AssignDiscount(Transaction transaction, decimal monthlyLimit, decimal discount)
         {
             if (Math.Max(monthlyLimit - discount, 0) == 0)

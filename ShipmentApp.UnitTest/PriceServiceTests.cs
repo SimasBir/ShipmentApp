@@ -10,13 +10,12 @@ namespace ShipmentApp.UnitTest
 {
     public class PriceServiceTests
     {
-
         [Fact]
         public void CalculatePrice_GivenCorrectData_GivesCorrectPrice()
         {
             var importFileServiceMock = new Mock<IFileService>();
 
-            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfo()).Returns(new List<PricingInfo>
+            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfoAsync()).ReturnsAsync(new List<PricingInfo>
             {
                new PricingInfo{Provider = "LP", PackageSize = "S", Price = 1.5M},
                new PricingInfo{Provider = "MR", PackageSize = "M", Price = 3M}
@@ -33,12 +32,13 @@ namespace ShipmentApp.UnitTest
             transactions[0].Price.Should().Be(1.5M);
             transactions[1].Price.Should().Be(3M);
         }
+
         [Fact]
         public void CalculatePrice_GivenIncorrectData_SetsInvalid()
         {
             var importFileServiceMock = new Mock<IFileService>();
 
-            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfo()).Returns(new List<PricingInfo>
+            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfoAsync()).ReturnsAsync(new List<PricingInfo>
             {
                new PricingInfo{Provider = "LP", PackageSize = "S", Price = 1.5M},
                new PricingInfo{Provider = "MR", PackageSize = "M", Price = 3M}
@@ -55,12 +55,13 @@ namespace ShipmentApp.UnitTest
             transactions[0].Valid.Should().Be(false);
             transactions[1].Valid.Should().Be(false);
         }
+
         [Fact]
         public void CalculateDiscounts_GivenCorrectData_GivesSmallPackageDiscount()
         {
             var importFileServiceMock = new Mock<IFileService>();
 
-            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfo()).Returns(new List<PricingInfo>
+            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfoAsync()).ReturnsAsync(new List<PricingInfo>
             {
                new PricingInfo{Provider = "LP", PackageSize = "S", Price = 1.5M},
                new PricingInfo{Provider = "MR", PackageSize = "S", Price = 2M},
@@ -80,12 +81,13 @@ namespace ShipmentApp.UnitTest
             transactions[1].Discount.Should().Be(0.50M);
             transactions[1].Price.Should().Be(1.50M);
         }
+
         [Fact]
         public void CalculateDiscounts_GivenCorrectData_GivesLPLargePackageDiscount()
         {
             var importFileServiceMock = new Mock<IFileService>();
 
-            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfo()).Returns(new List<PricingInfo>
+            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfoAsync()).ReturnsAsync(new List<PricingInfo>
             {
                new PricingInfo{Provider = "LP", PackageSize = "L", Price = 6.90M},
                new PricingInfo{Provider = "LP", PackageSize = "S", Price = 1.5M},
@@ -109,12 +111,13 @@ namespace ShipmentApp.UnitTest
             transactions[2].Price.Should().Be(0M);
             transactions[3].Price.Should().Be(6.90M);
         }
+
         [Fact]
         public void CalculateDiscounts_GivenCorrectData_10MonthlyDiscountLimit()
         {
             var importFileServiceMock = new Mock<IFileService>();
 
-            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfo()).Returns(new List<PricingInfo>
+            importFileServiceMock.Setup(ifs => ifs.LoadPricingInfoAsync()).ReturnsAsync(new List<PricingInfo>
             {
                new PricingInfo{Provider = "LP", PackageSize = "L", Price = 6.90M},
                new PricingInfo{Provider = "LP", PackageSize = "S", Price = 1.5M},

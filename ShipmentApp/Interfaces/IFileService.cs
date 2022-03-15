@@ -7,6 +7,6 @@ namespace ShipmentApp.Interfaces
     public interface IFileService
     {
         Task<string[]> ImportFileAsync(string name);
-        List<PricingInfo> LoadPricingInfo();
+        Task<List<PricingInfo>> LoadPricingInfoAsync();
     }
 }

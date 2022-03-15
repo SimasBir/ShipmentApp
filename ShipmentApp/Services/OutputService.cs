@@ -8,7 +8,6 @@ namespace ShipmentApp.Services
     {
         public void Print(string message)
         {
-            //File.AppendAllLines("D:/~Github/C#/ShipmentApp/ShipmentApp/Data/Output.txt", new[] { message });
             File.AppendAllText("Data/Output.txt",  message + Environment.NewLine);
         }
         public void Reset()

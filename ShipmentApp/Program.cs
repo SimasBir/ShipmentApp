@@ -14,7 +14,6 @@ namespace ShipmentApp
             var mainService = serviceProvider.GetService<MainService>();
 
             await mainService.ExecuteAsync();
-
         }
     }
 }

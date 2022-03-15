@@ -14,7 +14,7 @@ namespace ShipmentApp
 
             services.AddTransient<IFileService, FileService>();
             services.AddTransient<IOutputService, OutputService>();
-            //services.AddTransient<IOutputService, ConsoleService>();
+            services.AddTransient<IOutputService, ConsoleService>();
         }
     }
 }

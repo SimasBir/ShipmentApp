@@ -12,11 +12,8 @@ namespace ShipmentApp.UnitTest
         public async Task ExecuteAsync_PrintingResultsToFile_ShouldBeEqualToExample()
         {
             var fileService = new FileService();
-
             var outputService = new OutputService();
-
             var priceService = new PriceService(fileService);
-
             var modelService = new ModelService();
 
             var shippingService = new MainService(outputService, modelService, priceService, fileService);

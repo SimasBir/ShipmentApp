@@ -41,40 +41,6 @@ namespace ShipmentApp.Services
             }
 
             //Can be run from cmd "dotnet run" while in solution folder and "dotnet test" in test folder
-
-            //bool loop = true;
-            //while (loop == true)
-            //{
-            //    Console.Write("Select between 'run file {filename}' and 'run test', 'run exit': ");
-            //    string[] select = Console.ReadLine().Split(" ");
-            //    if (select[0] == "run")
-            //    {
-            //        switch (select[1].ToLower())
-            //        {
-            //            case "file":
-            //                Console.WriteLine("runFile");
-
-            //                break;
-
-            //            case "test":
-            //                Console.WriteLine("runTest");
-            //                break;
-
-            //            case "exit":
-            //                loop = false;
-            //                break;
-
-            //            default:
-            //                Console.WriteLine("Continue");
-            //                break;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine("Enter a valid command");
-            //    }
-            //}
-
         }
     }
 }

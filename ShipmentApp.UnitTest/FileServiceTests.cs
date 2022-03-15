@@ -24,11 +24,22 @@ namespace ShipmentApp.UnitTest
             transactions.Should().HaveCount(21);
             transactions[0].Should().Be("2015-02-01 S MR");
             transactions[20].Should().Be("2015-03-01 S MR");
+        } 
+        [Fact]
+        public async Task ImportTransactionsAsync_GivenCorrectData_ParsesDataAsInputSample()
+        {
+            var fileService = new FileService();
 
+            //Act
+            var transactions = await fileService.ImportFileAsync("");
+            var processedTransactions = await File.ReadAllLinesAsync("Data/InputSample.txt");
+
+            //Assert
+            transactions.Should().BeEquivalentTo(processedTransactions);
         }
 
         [Fact]
-        public void LoadPricingInfosAsync_GivenCorrectData_ParsesDataSucessfully()
+        public async Task LoadPricingInfosAsync_GivenCorrectData_ParsesDataSucessfully()
         {
             var sample = new List<PricingInfo>
             {
@@ -39,7 +50,7 @@ namespace ShipmentApp.UnitTest
             var fileService = new FileService();
 
             //Act
-            var pricingInfos = fileService.LoadPricingInfo();
+            var pricingInfos = await fileService.LoadPricingInfoAsync();
 
             //Assert
             pricingInfos.Count.Should().Be(6);
