@@ -3,19 +3,16 @@ using ShipmentApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShipmentApp.Services
 {
     public class PriceService
     {
-        //private List<PricingInfo> _pricingInfo;
         private IFileService _fileService;
 
         public PriceService(IFileService fileService)
         {
             _fileService = fileService;
-            //_pricingInfo = _fileService.LoadPricingInfo();
         }
 
         public async void CalculatePrice(List<Transaction> transactions)
@@ -43,7 +40,7 @@ namespace ShipmentApp.Services
             int countLP = 0; // third LP shipment free counter
 
             var pricingInfo = await _fileService.LoadPricingInfoAsync();
-            decimal lowestSmallPrice = pricingInfo.OrderBy(p => p.Price).FirstOrDefault(s => s.PackageSize == "S").Price; //Find lowest S size cost
+            decimal lowestSmallPrice = pricingInfo.Where(a => a.PackageSize == "S").Min(m => m.Price); //Find lowest S size cost
 
             var ordered = transactions.OrderBy(d => d.Date).Where(v=>v.Valid == true);
             foreach (var transaction in ordered)

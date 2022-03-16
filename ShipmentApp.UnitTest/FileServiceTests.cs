@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using Moq;
-using ShipmentApp.Interfaces;
 using ShipmentApp.Models;
 using ShipmentApp.Services;
 using System.Collections.Generic;
