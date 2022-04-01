@@ -35,7 +35,7 @@ namespace ShipmentApp.Services
 
         public async void CalculateDiscounts(List<Transaction> transactions)
         {
-            var previousMonth = 0;
+            var previousMonth = "";
             decimal monthlyLimit = 0;
             int countLP = 0; // third LP shipment free counter
 
@@ -45,7 +45,7 @@ namespace ShipmentApp.Services
             var ordered = transactions.OrderBy(d => d.Date).Where(v=>v.Valid == true);
             foreach (var transaction in ordered)
             {
-                var currentMonth = DateTime.ParseExact(transaction.Date, "yyyy-MM-dd", null).Month;
+                var currentMonth = DateTime.ParseExact(transaction.Date, "yyyy-MM-dd", null).ToString("yyyy-MM");
                 if (currentMonth != previousMonth)
                 {
                     monthlyLimit = 10.0M; //monthly limit
